@@ -7,7 +7,7 @@ import { Product } from './entities/product.entity';
 export class ProductService {
 
 
-  private readonly products: Product[] = [];
+  private readonly products: Product[] = [{ id: "1", name: "Product 1", description: "Description 1", price: 100 }];
 
   findAll(): Promise<Product[]> {
     return new Promise((resolve) => {
@@ -32,8 +32,14 @@ export class ProductService {
 
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
-    try {
+
+    // try {
       return new Promise((resolve) => {
+
+        if(!Object.keys(createProductDto).length){
+          throw new Error("Creation failed");
+        }
+        
         const newProduct: Product = {
           ...createProductDto,
           // crea un id aleatoria:
@@ -41,10 +47,11 @@ export class ProductService {
         };
         this.products.push(newProduct);
         resolve(newProduct);
+     
       });
-    } catch (error) {
-      throw new Error("Creation failed");
-    }
+    // } catch (error) {
+    //   throw new Error("Creation failed");
+    // }
   }
 
   async update(id: string, updateProductDto: UpdateProductDto): Promise<Product> {
@@ -56,7 +63,8 @@ export class ProductService {
           return ;
         }
         // Sobreescribe lo anterior en caso de que se repita:
-        const updatedProduct = { ...this.products[index], ...updateProductDto };
+        const updatedProduct:Product = { ...this.products[index], ...updateProductDto, id: id };
+
         this.products[index] = updatedProduct;
 
         resolve(updatedProduct);

@@ -7,7 +7,7 @@ async function bootstrap() {
   // esta linea de codigo es como decir: cuando cree validaciones en multiples dto, siempre van a validar.
   // es una clase que valida todo. 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true,
-    forbidNonWhitelisted: true,}));
+    forbidNonWhitelisted: true}));
   app.enableCors();
   app.setGlobalPrefix('api')
   await app.listen(3000);

@@ -5,6 +5,7 @@ import { Product } from './entities/product.entity';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { validate } from 'class-validator';
 
 
 
@@ -33,7 +34,7 @@ describe('ProductController', () => {
       expect(controller.findAll).toBeDefined();
     });
 
-    it("should return an array of products successfully", async () => {
+    it("should return an array of products", async () => {
       const products: Product[] = [
         { id: "1", name: "Product 1", description: "Description 1", price: 100 },
         { id: "2", name: "Product 2", description: "Description 2", price: 200 },
@@ -85,7 +86,7 @@ describe('ProductController', () => {
       expect(result).toEqual(product);
     });
 
-    it("should throw NotFoundException if product not found", async () => {
+    it("Should throw NotFoundException if the product is not found or does not exist", async () => {
 
       const productId = '1';
 
@@ -105,7 +106,7 @@ describe('ProductController', () => {
       expect(controller.create).toBeDefined();
     });
 
-    it("should create a product", async () => {
+    it("should create and return the product", async () => {
       const createProductDto: CreateProductDto = { name: "Product 1", description: "Description 1", price: 100 };
 
       const product = { ...createProductDto, id: "1" };
@@ -128,6 +129,7 @@ describe('ProductController', () => {
       await expect(controller.create(createProductDto)).rejects.toThrow(BadRequestException);
 
     });
+
   });
 
 
@@ -152,7 +154,7 @@ describe('ProductController', () => {
         expect(result).toEqual(updateProductMock);
       });
 
-      it("should throw NotFoundException on update failure", async () => {
+      it("Should throw NotFoundException if the product is not found or does not exist", async () => {
         const productId = "899";
         const updateProductDto: UpdateProductDto = { name: "nameUpdate" };
 
@@ -182,7 +184,7 @@ describe('ProductController', () => {
         expect(result).toEqual(productMock);
       });
 
-      it("should throw NotFoundException on delete failure", async () => {
+      it("Should throw NotFoundException if the product is not found or does not exist", async () => {
         const productId = "1";
 
         jest.spyOn(service, "remove").mockImplementation(async () => {
